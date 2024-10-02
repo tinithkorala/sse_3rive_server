@@ -1,4 +1,4 @@
-import { register } from "../services/authService.js";
+import { register, login } from "../services/authService.js";
 import catchAsync from "../util/catchAsync.js";
 import { createAccessToken, createRefreshToken } from "../util/token.js";
 
@@ -19,3 +19,10 @@ export const signUp = catchAsync(async (req, res, next) => {
     createAndSendTokens(response.user, 201, res, "SignUp");
   }
 });
+
+export const signIn = catchAsync(async (req, res, next) => {
+  const response = await login(req.body);
+  if (response) {
+    createAndSendTokens(response.user, 200, res, "SignIn");
+  }
+})

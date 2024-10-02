@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 import { DataTypes, Sequelize } from "sequelize";
 import sequelize from "../database/postgres.js";
@@ -101,8 +101,8 @@ const User = sequelize.define(
   }
 );
 
-User.addHook('beforeSave', async (user, options) => {
-  if(user.changed('password')) {
+User.addHook("beforeSave", async (user, options) => {
+  if (user.changed("password")) {
     try {
       const saltRounds = parseInt(process.env.PASSWORD_SALT) || 10;
       user.password = await bcrypt.hash(user.password, saltRounds);
@@ -110,6 +110,10 @@ User.addHook('beforeSave', async (user, options) => {
       throw new Error("Password hashing failed.");
     }
   }
-})
+});
+
+User.prototype.isCorrectPassword = async function (inputPassword) {
+  return await bcrypt.compare(inputPassword, this.password);
+};
 
 export default User;
