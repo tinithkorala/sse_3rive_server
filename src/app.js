@@ -1,15 +1,16 @@
-import express from 'express';
+import express from "express";
 
-import loggerMorganMiddleware from './middleware/loggerMorganMiddleware.js';
+import loggerMorganMiddleware from "./middleware/loggerMorganMiddleware.js";
+import notFoundHandler from "./middleware/notFoundMiddleware.js";
 
 // Express application setup
 const app = express();
 
-console.log('APP DB:', process.env.PG_DB);
-console.log('APP PORT:', process.env.PORT);
+console.log("APP DB:", process.env.PG_DB);
+console.log("APP PORT:", process.env.PORT);
 
 // Midlleware
-app.use(loggerMorganMiddleware)
+app.use(loggerMorganMiddleware);
 
 // Route to handlers
 app.get("/", (req, res) => {
@@ -18,5 +19,9 @@ app.get("/", (req, res) => {
     message: "Health ok !",
   });
 });
+
+// Error handlers
+// Not found routes
+app.all("*", notFoundHandler);
 
 export default app;
