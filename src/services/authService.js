@@ -1,20 +1,30 @@
 import { badRequest } from "../config/errorConfig.js";
 import User from "../models/User.js";
 import AppError from "../util/appError.js";
+import { createAccessToken, createRefreshToken } from "../util/token.js";
 
 export const register = async (data) => {
   try {
+    const { name, code } = badRequest;
     // Check Duplicates
     const duplicates = await User.findOne({ where: { email: data.email } });
 
     if (duplicates) {
-      const { name, code } = badRequest;
       throw new AppError(name, "Email is already registered", code);
     }
 
     const user = await User.create(data);
 
-    return user;
+    if (!user) {
+      throw new AppError(name, "Error when user created!", code);
+    }
+
+    const accessToken = createAccessToken({ id: user.id, role: user.role });
+    const refreshToken = createRefreshToken({ id: user.id, role: user.role });
+
+    const {password, isActive, updatedAt, createdAt, ...restUser} = user.get({ plain: true });
+
+    return { user: restUser, accessToken, refreshToken };
   } catch (error) {
     throw error;
   }

@@ -28,8 +28,6 @@ export const internalServerError = {
   code: 500,
 };
 
-
-
 export default {
   badRequest,
   unauthorized,
