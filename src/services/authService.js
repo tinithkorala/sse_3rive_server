@@ -29,7 +29,3 @@ export const register = async (data) => {
     throw error;
   }
 };
-
-// const authService = {
-//   createUser:
-// }
