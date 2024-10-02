@@ -1,7 +1,6 @@
 import { badRequest } from "../config/errorConfig.js";
 import User from "../models/User.js";
 import AppError from "../util/appError.js";
-import { createAccessToken, createRefreshToken } from "../util/token.js";
 
 export const register = async (data) => {
   try {
@@ -19,12 +18,11 @@ export const register = async (data) => {
       throw new AppError(name, "Error when user created!", code);
     }
 
-    const accessToken = createAccessToken({ id: user.id, role: user.role });
-    const refreshToken = createRefreshToken({ id: user.id, role: user.role });
+    const { password, isActive, updatedAt, createdAt, ...restUser } = user.get({
+      plain: true,
+    });
 
-    const {password, isActive, updatedAt, createdAt, ...restUser} = user.get({ plain: true });
-
-    return { user: restUser, accessToken, refreshToken };
+    return { user: restUser };
   } catch (error) {
     throw error;
   }
