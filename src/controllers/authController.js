@@ -1,6 +1,8 @@
+import { unauthorized } from "../config/errorConfig.js";
 import { register, login } from "../services/authService.js";
+import { findUserById } from "../services/userService.js";
 import catchAsync from "../util/catchAsync.js";
-import { createAccessToken, createRefreshToken } from "../util/token.js";
+import { createAccessToken, createRefreshToken, verifyToken } from "../util/token.js";
 
 const createAndSendTokens = (user, statusCode, res, messageText) => {
   const accessToken = createAccessToken({ id: user.id, role: user.role });
@@ -8,7 +10,7 @@ const createAndSendTokens = (user, statusCode, res, messageText) => {
 
   res.status(statusCode).json({
     status: "success",
-    message: `${messageText} Success!`,
+    message: `${messageText} successfully!`,
     data: { user, accessToken, refreshToken },
   });
 };
@@ -25,4 +27,28 @@ export const signIn = catchAsync(async (req, res, next) => {
   if (response) {
     createAndSendTokens(response.user, 200, res, "SignIn");
   }
-})
+});
+
+export const refreshToken = catchAsync(async (req, res, next) => {
+  const { name, code } = unauthorized;
+  const { refresh_token } = req.body;
+
+  const decode = await verifyToken(refresh_token, process.env.REFRESH_TOKEN_SECRET);
+
+  if (!decode) {
+    return next(new AppError(name, "Token is not validated!", code));
+  }
+
+  const currentUser = await findUserById(decode.id);
+
+  const accessToken = createAccessToken({
+    id: currentUser.id,
+    role: currentUser.role,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: `Access token generated successfully!`,
+    data: { accessToken },
+  });
+});

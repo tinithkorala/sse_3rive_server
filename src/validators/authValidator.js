@@ -37,3 +37,12 @@ export const authSignInSchema = Joi.object({
   email: email,
   password: password,
 });
+
+
+export const authRefreshTokenSchema = Joi.object({
+  refresh_token: Joi.string().min(2).max(200).required().messages({
+    "string.base": `"Refresh Token" should be a type of 'text'`,
+    "string.empty": `"Refresh Token" cannot be an empty field`,
+    "any.required": `"Refresh Token" is a required field`,
+  }),
+});
