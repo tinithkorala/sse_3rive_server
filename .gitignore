@@ -3,3 +3,6 @@
 
 # Logs
 /src/logs/app.log
+
+# dotenv environment variable files
+.env
