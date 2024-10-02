@@ -2,6 +2,7 @@ import express from "express";
 
 import loggerMorganMiddleware from "./middleware/loggerMorganMiddleware.js";
 import notFoundHandler from "./middleware/notFoundMiddleware.js";
+import globalErrorHandler from "./controllers/errorController.js";
 
 // Express application setup
 const app = express();
@@ -24,17 +25,6 @@ app.get("/", (req, res) => {
 // Not found routes
 app.all("*", notFoundHandler);
 
-app.use((error, req, res, next) => {
-  const statusCode = error.statusCode || 500;
-  const status = error.status || "error";
-  const message = error.message || "Error Occured";
-  const name = error.name || "Error";
-
-  res.status(statusCode).json({
-    name,
-    status,
-    message,
-  });
-});
+app.use(globalErrorHandler);
 
 export default app;
