@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import app from "./app.js";
+import sequelize from "./models/associations.js";
 import logger from "./util/logger.js";
 
 // Server configuration
@@ -11,6 +12,13 @@ console.log("PORT:", process.env.PORT);
 
 const startServer = async () => {
   try {
+    // Authenticate the Sequelize connection
+    await sequelize.authenticate();
+    logger.info("Database connected successfully.")
+
+    await sequelize.sync();
+    logger.info("All models were synchronized successfully.")
+
     // Server Listen
     app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`)
