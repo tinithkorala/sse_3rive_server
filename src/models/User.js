@@ -65,8 +65,8 @@ const User = sequelize.define(
           msg: "Password cannot be empty.",
         },
         len: {
-          args: [6, 100],
-          msg: "Password must be at least 6 characters long.",
+          args: [8],
+          msg: "Password must be at least 8 characters long.",
         },
       },
     },

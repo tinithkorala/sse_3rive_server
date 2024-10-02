@@ -18,10 +18,17 @@ export const resourceNotFound = {
   code: 404,
 };
 
+export const validationError = {
+  name: "Validation Error: The request data is invalid.",
+  code: 422,
+};
+
 export const internalServerError = {
   name: "Internal Server Error: The server has encountered a situation it doesn't know how to handle.",
   code: 500,
 };
+
+
 
 export default {
   badRequest,
@@ -29,4 +36,5 @@ export default {
   forbidden,
   resourceNotFound,
   internalServerError,
+  validationError
 };

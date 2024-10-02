@@ -3,9 +3,11 @@ import express from "express";
 import loggerMorganMiddleware from "./middleware/loggerMorganMiddleware.js";
 import notFoundHandler from "./middleware/notFoundMiddleware.js";
 import globalErrorHandler from "./controllers/errorController.js";
+import  authRouter from "./routes/authRoutes.js";
 
 // Express application setup
 const app = express();
+app.use(express.json());
 
 console.log("APP DB:", process.env.PG_DB);
 console.log("APP PORT:", process.env.PORT);
@@ -20,6 +22,8 @@ app.get("/", (req, res) => {
     message: "Health ok !",
   });
 });
+
+app.use("/api/v1/auth", authRouter);
 
 // Error handlers
 // Not found routes
