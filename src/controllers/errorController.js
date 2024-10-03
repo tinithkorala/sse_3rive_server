@@ -14,6 +14,26 @@ const handleCastErrorDb = (error) => {
   return new AppError(BadRqName, message, BadRqCode);
 };
 
+const handleSequelizeValidationErrorDb = (error) => {
+  const errorMessage =
+    error.errors[0]?.message || "An unknown validation error occurred.";
+  return new AppError(
+    BadRqName,
+    `Unique Constraint Error: ${errorMessage}`,
+    BadRqCode
+  );
+};
+
+const handleSequelizeUniqueConstraintErrorDb = (error) => {
+  const errorMessage =
+    error.errors[0]?.message || "A unique constraint error occurred.";
+  return new AppError(
+    BadRqName,
+    `Unique Constraint Error: ${errorMessage}`,
+    BadRqCode
+  );
+};
+
 const sendErrorResDev = (error, res) => {
   res.status(error.statusCode).json({
     name: error.name,
@@ -55,6 +75,10 @@ const globalErrorHandler = (error, req, res, next) => {
     let errorClone = { ...error };
     if (error.name === "SequelizeDatabaseError") {
       errorClone = handleCastErrorDb(errorClone);
+    } else if (error.name === "SequelizeValidationError") {
+      errorClone = handleSequelizeValidationErrorDb(errorClone);
+    } else if (error.name === "SequelizeUniqueConstraintError") {
+      errorClone = handleSequelizeUniqueConstraintErrorDb(errorClone);
     }
     let { statusCode, status, message, isOperational } = errorClone;
     sendErrorResProd({ statusCode, status, message, isOperational }, res);
