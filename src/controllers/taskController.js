@@ -8,7 +8,7 @@ import {
 import catchAsync from "../util/catchAsync.js";
 
 export const getTasks = catchAsync(async (req, res, next) => {
-  const response = await getTasksByUserId(req.user.id);
+  const response = await getTasksByUserId(req.user.id, req.query);
   if (response) {
     res.status(201).json({
       status: "Success",

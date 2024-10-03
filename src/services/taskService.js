@@ -1,12 +1,32 @@
 import { resourceNotFound } from "../config/errorConfig.js";
 import Task from "../models/Task.js";
 import AppError from "../util/appError.js";
+import APIQueryBuilder from "../util/apiQueryBuilder.js";
 
-export const getTasksByUserId = async (userId) => {
+export const getTasksByUserId = async (userId, query) => {
   try {
-    const tasks = await Task.findAll({ where: { user_id: userId } });
+    const queryBuilder = new APIQueryBuilder(
+      { where: { user_id: userId } },
+      query
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const { where, order, attributes, limit, offset, page } =
+      queryBuilder.query;
+
+    const tasks = await Task.findAll({
+      where,
+      order,
+      attributes,
+      limit,
+      offset,
+      page,
+    });
     return tasks;
-  } catch ({ error }) {
+  } catch (error) {
     throw error;
   }
 };
