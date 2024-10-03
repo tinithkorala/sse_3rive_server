@@ -1,7 +1,6 @@
 import { resourceNotFound } from "../config/errorConfig.js";
 import User from "../models/User.js";
 import AppError from "../util/appError.js";
-
 export const findUserById = async (id) => {
   try {
     const user = await User.findByPk(id, {
