@@ -26,6 +26,7 @@ const sendErrorResProd = (error, res) => {
 };
 
 const globalErrorHandler = (error, req, res, next) => {
+  console.log(error);
   const statusCode = error.statusCode || 500;
   const status = error.status || "error";
   const message = error.message || "Error Occured";
@@ -35,9 +36,9 @@ const globalErrorHandler = (error, req, res, next) => {
   logger.error({ message, stack });
 
   if (process.env.NODE_ENV === "development") {
-    sendErrorResDev(error, res);
+    sendErrorResDev({ statusCode, status, message, name, stack }, res);
   } else if (process.env.NODE_ENV === "production") {
-    sendErrorResProd(error, res);
+    sendErrorResProd({ statusCode, status, message }, res);
   }
 };
 
