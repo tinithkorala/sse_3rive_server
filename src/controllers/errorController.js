@@ -1,4 +1,18 @@
+import { badRequest } from "../config/errorConfig.js";
+import AppError from "../util/appError.js";
 import logger from "../util/logger.js";
+
+const { name: BadRqName, code: BadRqCode } = badRequest;
+
+const handleCastErrorDb = (error) => {
+  let message = "Invalid input!";
+  if (error.parent && error.parent.code === "22P02") {
+    message = "Invalid input for integer!";
+  } else if (error.parent && error.parent.code === "22003") {
+    message = "Invalid input for integer! Value is out of range.!";
+  }
+  return new AppError(BadRqName, message, BadRqCode);
+};
 
 const sendErrorResDev = (error, res) => {
   res.status(error.statusCode).json({
@@ -26,19 +40,24 @@ const sendErrorResProd = (error, res) => {
 };
 
 const globalErrorHandler = (error, req, res, next) => {
-  console.log(error);
   const statusCode = error.statusCode || 500;
   const status = error.status || "error";
   const message = error.message || "Error Occured";
   const name = error.name || "Error";
   const stack = error.stack || "";
+  const isOperational = error.isOperational || false;
 
   logger.error({ message, stack });
 
   if (process.env.NODE_ENV === "development") {
     sendErrorResDev({ statusCode, status, message, name, stack }, res);
   } else if (process.env.NODE_ENV === "production") {
-    sendErrorResProd({ statusCode, status, message }, res);
+    let errorClone = { ...error };
+    if (error.name === "SequelizeDatabaseError") {
+      errorClone = handleCastErrorDb(errorClone);
+    }
+    let { statusCode, status, message, isOperational } = errorClone;
+    sendErrorResProd({ statusCode, status, message, isOperational }, res);
   }
 };
 
