@@ -18,17 +18,21 @@ class APIQueryBuilder {
     Object.keys(queryObj).forEach((key) => {
       if (typeof queryObj[key] === "object") {
         Object.keys(queryObj[key]).forEach((opKey) => {
+          let queryObjKeyOpKeyValue = queryObj[key][opKey];
+          let sanitizedValue = queryObjKeyOpKeyValue;
           if (opKey === "in") {
-            if (!Array.isArray(queryObj[key][opKey])) {
-              throw new AppError("Invalid", `Invalid filter`, 500);
+            if (!Array.isArray(queryObjKeyOpKeyValue)) {
+              // Note - Here I go with the if `queryObj[key][opKey]` is string also to filter tasks easy.
+              // throw new AppError("Invalid", `Invalid filter`, 500);
+              sanitizedValue = [queryObjKeyOpKeyValue];
             }
           } else {
-            if (Array.isArray(queryObj[key][opKey])) {
+            if (Array.isArray(queryObjKeyOpKeyValue)) {
               throw new AppError("Invalid", `Invalid filter`, 500);
             }
           }
           if (operatorsMap[opKey]) {
-            queryObj[key] = { [operatorsMap[opKey]]: queryObj[key][opKey] };
+            queryObj[key] = { [operatorsMap[opKey]]: sanitizedValue };
           } else {
             delete queryObj[key];
           }
