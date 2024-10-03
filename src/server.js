@@ -1,5 +1,13 @@
 import "dotenv/config";
 
+// Handle application uncaughtExceptions
+process.on("uncaughtException", (error) => {
+  console.log("Server closed due to unhandled exception ", error);
+  setTimeout(() => {
+    process.exit(1);
+  }, 100);
+});
+
 import app from "./app.js";
 import sequelize from "./models/associations.js";
 import logger from "./util/logger.js";
@@ -12,6 +20,17 @@ console.log("DB:", process.env.PG_DB);
 console.log("PORT:", process.env.PORT);
 
 let server;
+
+const shutdownServer = (message, stack) => {
+  logger.error({ message, stack });
+  if (server) {
+    server.close(() => {
+      exitServer();
+    });
+  } else {
+    exitServer();
+  }
+};
 
 const startServer = async () => {
   try {
@@ -27,23 +46,15 @@ const startServer = async () => {
       logger.info(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    logger.error({ message: error.message, stack: error.stack });
-    exitServer()
+    shutdownServer(error.message, error.stack);
   }
 };
 
-startServer();
-
 process.on("unhandledRejection", (error) => {
-  if (server) {
-    const message =
-      error?.message || "Server closed due to unhandled promise rejection";
-    const stack = error?.stack || null;
-    logger.error({ message, stack });
-    server.close(() => {
-      exitServer();
-    });
-  } else {
-    exitServer();
-  }
+  const message =
+    error?.message || "Server closed due to unhandled promise rejection";
+  const stack = error?.stack || null;
+  shutdownServer(message, stack);
 });
+
+startServer();
