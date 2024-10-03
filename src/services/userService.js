@@ -1,4 +1,4 @@
-import { unauthorized } from "../config/errorConfig.js";
+import { resourceNotFound } from "../config/errorConfig.js";
 import User from "../models/User.js";
 import AppError from "../util/appError.js";
 
@@ -10,10 +10,10 @@ export const findUserById = async (id) => {
       },
     });
     if (!user) {
-      const { name, code } = unauthorized;
+      const { name, code } = resourceNotFound;
       throw new AppError(
         name,
-        "The user belonging to this token does no longer exist!",
+        "The user not found!",
         code
       );
     }

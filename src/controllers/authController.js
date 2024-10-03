@@ -41,6 +41,16 @@ export const refreshToken = catchAsync(async (req, res, next) => {
 
   const currentUser = await findUserById(decode.id);
 
+  if (!currentUser) {
+    return next(
+      new AppError(
+        name,
+        "The user belonging to this token does no longer exist!",
+        code
+      )
+    );
+  }
+
   const accessToken = createAccessToken({
     id: currentUser.id,
     role: currentUser.role,
