@@ -1,13 +1,13 @@
 import express from "express";
-import { createTask } from "../controllers/taskController.js";
+import { createTask, getTasks } from "../controllers/taskController.js";
 import validateMiddleware from "../middleware/validateMiddleware.js";
 import { taskCreateSchema } from "../validators/taskValidator.js";
 import protectMiddleware from "../middleware/protectMiddleware.js";
 
 const router = express.Router();
 
-router.use(validateMiddleware(taskCreateSchema));
+router.use(protectMiddleware);
 
-router.route("/").get().post(protectMiddleware, createTask);
+router.route("/").get(getTasks).post(validateMiddleware(taskCreateSchema), createTask);
 
 export default router;
