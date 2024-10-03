@@ -1,8 +1,10 @@
 import express from "express";
 import {
   createTask,
+  deleteTask,
   getTask,
   getTasks,
+  updateTask,
 } from "../controllers/taskController.js";
 import validateMiddleware from "../middleware/validateMiddleware.js";
 import { taskCreateSchema } from "../validators/taskValidator.js";
@@ -17,6 +19,6 @@ router
   .get(getTasks)
   .post(validateMiddleware(taskCreateSchema), createTask);
 
-router.route("/:id").get(getTask).patch().delete();
+router.route("/:id").get(getTask).patch(updateTask).delete(deleteTask);
 
 export default router;

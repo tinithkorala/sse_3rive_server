@@ -1,7 +1,9 @@
 import {
-  create,
-  getSingleTaskByUserId,
+  createByUserId,
+  updateByUserId,
+  getTaskByUserId,
   getTasksByUserId,
+  deleteByUserId,
 } from "../services/taskService.js";
 import catchAsync from "../util/catchAsync.js";
 
@@ -20,7 +22,7 @@ export const getTasks = catchAsync(async (req, res, next) => {
 });
 
 export const createTask = catchAsync(async (req, res, next) => {
-  const response = await create(req.body, req.user.id);
+  const response = await createByUserId(req.body, req.user.id);
   if (response) {
     res.status(201).json({
       status: "Success",
@@ -33,11 +35,11 @@ export const createTask = catchAsync(async (req, res, next) => {
 });
 
 export const getTask = catchAsync(async (req, res, next) => {
-  const response = await getSingleTaskByUserId(req.params.id, req.user.id);
+  const response = await getTaskByUserId(req.params.id, req.user.id);
   if (response) {
     res.status(200).json({
       status: "Success",
-      message: "Task fetch successfully!",
+      message: "Task fetched successfully!",
       results: response.length,
       data: {
         tasks: response,
@@ -45,3 +47,27 @@ export const getTask = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+export const updateTask = catchAsync(async (req, res, next) => {
+  const response = await updateByUserId(req.body, req.params.id, req.user.id);
+  if (response) {
+    res.status(200).json({
+      status: "Success",
+      message: "Task updated successfully!",
+      results: response.length,
+      data: {
+        tasks: response,
+      },
+    });
+  }
+});
+
+export const deleteTask = catchAsync(async (req, res, next) => {
+  const response = await deleteByUserId(req.params.id, req.user.id)
+  if (response) {
+    res.status(200).json({
+      status: "Success",
+      message: "Task deleted successfully!",
+    });
+  }
+})
