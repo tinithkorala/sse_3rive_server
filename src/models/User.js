@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 
 import { DataTypes, Sequelize } from "sequelize";
 import sequelize from "../database/postgres.js";
+import { USER_ROLE } from "../config/enumConfig.js";
 
 const User = sequelize.define(
   "User",
@@ -92,12 +93,13 @@ const User = sequelize.define(
       defaultValue: true,
     },
     role: {
-      type: DataTypes.ENUM("user", "admin"),
-      defaultValue: "user",
+      type: DataTypes.ENUM(...Object.values(USER_ROLE)),
+      defaultValue: "USER",
     },
   },
   {
     timestamps: true,
+    tableName: "users",
   }
 );
 
