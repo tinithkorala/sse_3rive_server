@@ -1,9 +1,10 @@
-import { unauthorized } from "../config/errorConfig";
-import { findUserById } from "../services/userService";
-import AppError from "../util/appError";
-import { verifyToken } from "../util/token";
+import { unauthorized } from "../config/errorConfig.js";
+import { findUserById } from "../services/userService.js";
+import AppError from "../util/appError.js";
+import catchAsync from "../util/catchAsync.js";
+import { verifyToken } from "../util/token.js";
 
-const protectMiddleware = async (req, res, next) => {
+const protectMiddleware = catchAsync(async (req, res, next) => {
   const { name, code } = unauthorized;
   const authHeader =
     req.headers["authorization"] || req.headers["Authorization"];
@@ -14,7 +15,7 @@ const protectMiddleware = async (req, res, next) => {
 
   const accessToken = authHeader.split(" ")[1];
 
-  const decode = verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  const decode = await verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
   if (!decode) {
     return next(new AppError(name, "Token is not validated!", code));
@@ -34,6 +35,6 @@ const protectMiddleware = async (req, res, next) => {
 
   req.user = currentUser;
   next();
-};
+});
 
 export default protectMiddleware;
