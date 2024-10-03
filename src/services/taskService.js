@@ -9,6 +9,17 @@ export const getTasksByUserId = async (id) => {
   }
 };
 
+export const getSingleTaskByUserId = async (taskId, userId) => {
+  try {
+    const task = await Task.findAll({
+      where: { id: taskId, user_id: userId },
+    });
+    return task;
+  } catch ({ error }) {
+    throw error;
+  }
+};
+
 export const create = async (bodyData, userId) => {
   try {
     const task = Task.create({ ...bodyData, user_id: userId });
