@@ -1,30 +1,30 @@
 export const badRequest = {
-  name: "Bad Request: The server could not understand the request due to invalid syntax.",
+  name: "Bad Request",
   code: 400,
 };
 
 export const unauthorized = {
-  name: "Unauthorized: The request requires user authentication.",
+  name: "Unauthorized",
   code: 401,
 };
 
 export const forbidden = {
-  name: "Forbidden: The server understood the request, but refuses to authorize it.",
+  name: "Forbidden",
   code: 403,
 };
 
 export const resourceNotFound = {
-  name: "Resource Not Found: The server can't find the requested resource.",
+  name: "Resource Not Found",
   code: 404,
 };
 
 export const validationError = {
-  name: "Validation Error: The request data is invalid.",
+  name: "Validation Error",
   code: 422,
 };
 
 export const internalServerError = {
-  name: "Internal Server Error: The server has encountered a situation it doesn't know how to handle.",
+  name: "Internal Server Error",
   code: 500,
 };
 
