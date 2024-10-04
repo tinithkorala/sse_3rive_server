@@ -27,11 +27,11 @@ const Task = sequelize.define(
     },
     priority: {
       type: DataTypes.ENUM(...Object.values(TASK_PRIORITY)),
-      defaultValue: "LOW",
+      defaultValue: TASK_PRIORITY.LOW,
     },
     status: {
       type: DataTypes.ENUM(...Object.values(TASK_STATUS)),
-      defaultValue: "PENDING",
+      defaultValue: TASK_STATUS.PENDING,
     },
     due_date: {
       type: DataTypes.DATE,
@@ -50,6 +50,17 @@ const Task = sequelize.define(
   {
     timestamps: true,
     tableName: "tasks",
+    indexes: [
+      {
+        fields: ["user_id", "priority"],
+      },
+      {
+        fields: ["user_id", "status"],
+      },
+      {
+        fields: ["user_id", "due_date"],
+      },
+    ],
   }
 );
 

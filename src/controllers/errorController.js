@@ -72,7 +72,7 @@ const globalErrorHandler = (error, req, res, next) => {
   if (process.env.NODE_ENV === "development") {
     sendErrorResDev({ statusCode, status, message, name, stack }, res);
   } else if (process.env.NODE_ENV === "production") {
-    let errorClone = { ...error };
+    let errorClone = { ...error, message: error.message };
     if (error.name === "SequelizeDatabaseError") {
       errorClone = handleCastErrorDb(errorClone);
     } else if (error.name === "SequelizeValidationError") {
