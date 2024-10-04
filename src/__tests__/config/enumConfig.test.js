@@ -2,7 +2,7 @@ import {
   USER_ROLE,
   TASK_PRIORITY,
   TASK_STATUS,
-} from "./../config/enumConfig.js";
+} from "../../config/enumConfig.js";
 
 describe("enumConfig", () => {
   describe("USER_ROLE", () => {

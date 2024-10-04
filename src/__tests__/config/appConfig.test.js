@@ -1,4 +1,4 @@
-import { loggerConfig } from './../config/appConfig.js'; 
+import { loggerConfig } from '../../config/appConfig.js'; 
 
 describe('loggerConfig', () => {
   beforeEach(() => {
