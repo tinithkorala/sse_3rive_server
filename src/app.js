@@ -5,6 +5,7 @@ import notFoundHandler from "./middleware/notFoundMiddleware.js";
 import globalErrorHandler from "./controllers/errorController.js";
 import authRouter from "./routes/authRoutes.js";
 import taskRouter from "./routes/taskRoutes.js";
+import rateLimiterMiddleware from "./middleware/rateLimiterMiddleware.js";
 
 // Express application setup
 const app = express();
@@ -15,6 +16,7 @@ console.log("APP PORT:", process.env.PORT);
 
 // Midlleware
 app.use(loggerMorganMiddleware);
+app.use('/api',rateLimiterMiddleware);
 
 // Route to handlers
 app.get("/", (req, res) => {
