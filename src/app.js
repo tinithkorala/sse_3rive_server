@@ -9,7 +9,9 @@ import rateLimiterMiddleware from "./middleware/rateLimiterMiddleware.js";
 
 // Express application setup
 const app = express();
-app.use(express.json());
+app.use(express.json({
+  limit: '100kb'
+}));
 
 console.log("APP DB:", process.env.PG_DB);
 console.log("APP PORT:", process.env.PORT);
