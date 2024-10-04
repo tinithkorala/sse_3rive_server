@@ -22,9 +22,7 @@ class APIQueryBuilder {
           let sanitizedValue = queryObjKeyOpKeyValue;
           if (opKey === "in") {
             if (!Array.isArray(queryObjKeyOpKeyValue)) {
-              // Note - Here I go with the if `queryObj[key][opKey]` is string also to filter tasks easy.
-              // throw new AppError("Invalid", `Invalid filter`, 500);
-              sanitizedValue = [queryObjKeyOpKeyValue];
+              sanitizedValue = queryObjKeyOpKeyValue.split(",");
             }
           } else {
             if (Array.isArray(queryObjKeyOpKeyValue)) {
