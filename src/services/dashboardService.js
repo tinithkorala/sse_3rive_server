@@ -80,7 +80,7 @@ export const getAllTasksPriorityWise = async (userId, query) => {
       return { priority, task_count: taskCount };
     });
 
-    return tasks;
+    return results;
   } catch (error) {
     throw error;
   }
