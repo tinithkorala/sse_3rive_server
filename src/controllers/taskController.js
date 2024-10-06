@@ -71,7 +71,7 @@ export const deleteTask = catchAsync(async (req, res, next) => {
   const response = await deleteByUserId(req.params.id, req.user.id)
   if (response) {
     res.status(200).json({
-      status: "Success",
+      status: "success",
       message: "Task deleted successfully!",
     });
   }
