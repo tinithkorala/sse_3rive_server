@@ -9,8 +9,9 @@ const title = Joi.string().min(2).max(200).required().messages({
   "any.required": `"Title" is a required field`,
 });
 
-const description = Joi.string().allow("").messages({
+const description = Joi.string().required().messages({
   "string.base": `"Description" should be a type of 'text'`,
+  "any.required": `"Description" is a required field`,
 });
 
 const priority = Joi.string()
@@ -31,10 +32,22 @@ const due_date = Joi.date().required().messages({
   "date.required": `Due Date is required.`,
 });
 
+const status = Joi.string()
+  .valid(...Object.values(TASK_STATUS))
+  .required()
+  .messages({
+    "string.base": `"Status" should be a type of 'text'`,
+    "any.allow": `"Status" must be one of the following values: ${Object.values(
+      TASK_STATUS
+    ).join(", ")}`,
+    "any.required": `"Status" is a required field`,
+  });
+
 export const taskCreateSchema = Joi.object({
   title,
   description,
   priority,
+  status,
   due_date,
 });
 
@@ -42,13 +55,6 @@ export const taskUpdateSchema = Joi.object({
   title,
   description,
   priority,
-  status: Joi.string()
-    .valid(...Object.values(TASK_STATUS))
-    .messages({
-      "string.base": `"Status" should be a type of 'text'`,
-      "any.allow": `"Status" must be one of the following values: ${Object.values(
-        TASK_STATUS
-      ).join(", ")}`,
-    }),
+  status,
   due_date,
 });

@@ -1,3 +1,4 @@
+import { forbidden } from "./../config/errorConfig.js";
 import { unauthorized } from "../config/errorConfig.js";
 import { register, login } from "../services/authService.js";
 import { findUserById } from "../services/userService.js";
@@ -31,9 +32,10 @@ export const signIn = catchAsync(async (req, res, next) => {
 
 export const refreshToken = catchAsync(async (req, res, next) => {
   const { name, code } = unauthorized;
+  const { code: forbiddenCode } = forbidden;
   const { refresh_token } = req.body;
 
-  const decode = await verifyToken(refresh_token, process.env.REFRESH_TOKEN_SECRET);
+  const decode = await verifyToken(refresh_token, process.env.REFRESH_TOKEN_SECRET, forbiddenCode);
 
   if (!decode) {
     return next(new AppError(name, "Token is not validated!", code));

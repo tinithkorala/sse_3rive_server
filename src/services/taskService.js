@@ -25,7 +25,10 @@ export const getTasksByUserId = async (userId, query) => {
       offset,
       page,
     });
-    return tasks;
+
+    const totalResults = await Task.count({ where });
+    const totalPages = Math.ceil(totalResults / limit);
+    return { tasks, totalResults, totalPages, page };
   } catch (error) {
     throw error;
   }
