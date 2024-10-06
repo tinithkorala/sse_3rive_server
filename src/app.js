@@ -5,6 +5,7 @@ import cors from "cors";
 import loggerMorganMiddleware from "./middleware/loggerMorganMiddleware.js";
 import notFoundHandler from "./middleware/notFoundMiddleware.js";
 import globalErrorHandler from "./controllers/errorController.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import taskRouter from "./routes/taskRoutes.js";
 import rateLimiterMiddleware from "./middleware/rateLimiterMiddleware.js";
@@ -12,9 +13,6 @@ import { corsConfig } from "./config/corsConfig.js";
 
 // Express application setup
 const app = express();
-
-console.log("APP DB:", process.env.PG_DB);
-console.log("APP PORT:", process.env.PORT);
 
 // Midlleware
 app.use(cors(corsConfig));
@@ -35,6 +33,7 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/tasks", taskRouter);
 
