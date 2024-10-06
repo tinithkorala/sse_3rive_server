@@ -27,11 +27,11 @@ export const createRefreshToken = (payload) => {
   }
 };
 
-export const verifyToken = (token, secret) => {
+export const verifyToken = (token, secret, code = 401) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
-        reject(new AppError(err.name, "Token is invalid or expired", 401));
+        reject(new AppError(err.name, "Token is invalid or expired", code));
       }
       resolve(decoded);
     });
